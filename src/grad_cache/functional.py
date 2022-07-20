@@ -37,9 +37,15 @@ def cached(func: Callable[..., Tensor]):
             assert len(reps) == len(cache_reps)
 
             print(len(reps))
-#             for u in reps:
-#                 print('u')
-#                 assert u.requires_grad
+            for u in reps:
+                if not u.requires_grad:
+                    u.requires_grad = True
+            for v in reps:
+                if not v.requires_grad:
+                    v.requires_grad = True
+            for u in reps:
+                print('u')
+                assert u.requires_grad
             for v in cache_reps:
                 print('v')
                 assert v.requires_grad
