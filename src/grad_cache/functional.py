@@ -37,13 +37,16 @@ def cached(func: Callable[..., Tensor]):
             assert len(reps) == len(cache_reps)
 
             print(len(reps))
-            for u in reps:
-                assert u.requires_grad
-            for v in cache_reps:
-                assert v.requires_grad
-            surrogate = sum(map(lambda u, v: torch.dot(u.flatten(), v.grad.flatten()), reps, cache_reps), 0)
+#             for u in reps:
+#                 assert u.requires_grad
+#             for v in cache_reps:
+#                 assert v.requires_grad
+            if len(reps)==1:
+                surrogate = torch.dot(reps[0].flatten(), cache_reps[0].grad.flatten).sum()
+            else:
+                surrogate = sum(map(lambda u, v: torch.dot(u.flatten(), v.grad.flatten()), reps, cache_reps), 0)
             print(surrogate)
-            assert surrogate.requires_grad
+#             assert surrogate.requires_grad
             surrogate.backward()
 
         return leaf_reps + (forward_backward_func,)
