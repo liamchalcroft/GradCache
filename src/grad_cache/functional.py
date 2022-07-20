@@ -36,6 +36,7 @@ def cached(func: Callable[..., Tensor]):
                 cache_reps = (cache_reps,)
             assert len(reps) == len(cache_reps)
 
+            print(len(reps))
             surrogate = torch.sum(map(lambda u, v: torch.dot(u.flatten(), v.grad.flatten()), reps, cache_reps), 0)
             surrogate.backward()
 
